@@ -1,19 +1,27 @@
-# Return Analysis Report
+import pandas as pd
 
-This project analyzes product returns based on an Excel dataset.
+df = pd.read_excel("return_analysis_report.xlsx")
+df.head()
 
-## Files
 
-- `return_analysis_report.xlsx` – Input dataset
-- `return_analysis.py` – Python script for analysis and visualizations
-- `return_percentage_by_category.png` – Bar chart of return % by category
-- `most_returned_products.png` – Bar chart of most returned products
-- `correlation_heatmap.png` – Correlation heatmap
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-## Requirements
+cat_return = df.groupby('Category')['Returned'].mean() * 100
+cat_return.plot(kind='bar', color='skyblue')
+plt.title("Return % by Category")
+plt.ylabel("Return %")
+plt.show()
 
-Install dependencies:
 
-```bash
-pip install pandas seaborn matplotlib openpyxl
 
+top_products = df[df['Returned'] == 1]['Product'].value_counts()
+top_products.plot(kind='bar', color='orange')
+plt.title("Most Returned Products")
+plt.ylabel("Return Count")
+plt.show()
+
+
+sns.heatmap(df[['Price', 'Quantity', 'Returned']].corr(), annot=True, cmap="coolwarm")
+plt.title("Correlation Heatmap")
+plt.show()
